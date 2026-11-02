@@ -1,72 +1,143 @@
-# Real-Time-Stock-Management-System-for-Retail-Store
-Developed AI-based stock monitoring system using YOLOv8 and Roboflow. 
-It tracks the empty and filled spaces in the racks by capturing images using real time observation through camera setup. Trained model on 10,000+ shelf images for filled vs empty detection.
-Achieved 92% precision in stock classification and real-time processing (30+ FPS).
-Integrated alert system for low-stock notifications.
-Technologies: Python, YOLOv8, OpenCV, Roboflow, Google Colab.
-Real-Time-Stock-Management-System-for-Retail-Store is a revolutionizing retail stock management by automating inventory tracking, reducing manual labor, and enhancing operational efficiency. This technology enables real-time monitoring of stock levels, ensuring timely restocking and optimized inventory management. It improves customer experience by maintaining product availability and streamlining checkout processes. Additionally, image recognition provides valuable data insights for customer behavior analysis and demand forecasting, while also enhancing security through theft detection. As a result, retailers can achieve greater accuracy, efficiency, and customer satisfaction in their operations.
-The integration of image recognition in retail facilitates timely restocking, prevents stockouts, and maintains optimal inventory levels, leading to improved customer satisfaction and reduced labor costs. Additionally, this technology supports the optimization of shelf space by ensuring products are displayed according to planograms, thus enhancing their visibility and availability. Retailers can also utilize predictive analytics derived from image recognition data to forecast demand more accurately, enabling smarter procurement strategies that mitigate overstock and stockout situations.
-#Algorithm
-For single image: 
-Algorithm for Object Detection Using Roboflow in Google Colab 
-1. Setup Environment: 
- Install the roboflow package. 
- Import necessary libraries: cv2, numpy, Roboflow, and cv2_imshow from Colab 
-patches. 
-2. Initialize Roboflow Model: 
- Create a Roboflow instance using the API key. 
-26 
- Access the desired project and model version. 
-3. Load Image: 
- Load an image from the specified path (/content/test_image.jpg). 
-4. Make Predictions: 
- Use the model to predict objects in the image. 
- Retrieve predictions in JSON format. 
-5. Process Predictions: 
- Initialize counters for different object classes (e.g., "filled" and "empty"). 
- Iterate over each prediction: 
- Extract class name and bounding box coordinates (x, y, width, height). 
- Determine color for bounding box based on class (e.g., green for "filled", red for 
-"empty"). 
- Calculate bottom-right corner coordinates of the bounding box. 
- Draw rectangle on the image using cv2.rectangle. 
- Append bounding box data to a list for further use. 
-6. Display Results: 
- Show the image with bounding boxes using cv2_imshow. 
- Print counts of each class. 
- Print details of each detected box. 
-Key Points 
- Bounding Boxes: Visualize detected objects with rectangles. 
- Class Counting: Keep track of how many objects belong to each class. 
- Output: Display processed image and print relevant information. 
-This algorithm is designed to detect and classify objects in images using a pre-trained model hosted on Roboflow, specifically within
-a Google Colab environment. Adjust API keys, project names, and version numbers as needed for your specific use case.
+# Real-Time Stock Management System for Retail Store
 
-For multiple images 
-1. Setup and Initialization: 
- Install necessary packages: roboflow, opencv-python-headless, etc.
- Import required libraries: cv2 and Roboflow. 
- Initialize the RoboFlow model with API key, project name, and version. 
-2. Video Capture: 
- Open the default camera using cv2.VideoCapture(). 
- Check if the camera is accessible; exit if not. 
-3. Main Loop: 
- Continuously capture frames from the camera. 
- For each frame: 
- Use the RoboFlow model to predict objects. 
- Initialize counters for different classes (e.g., "Filled", "Empty"). 
-4. Object Detection and Annotation: 
- Iterate through predictions: 
- Extract bounding box coordinates and class names. 
- Count occurrences of each class. 
- Assign colors based on class (e.g., green for "Filled", red for "Empty"). 
- Draw bounding boxes and labels on the frame. 
-5. Display: 
- Show the processed frame in a window titled "Camera Feed". 
- Print counts of detected objects. 
-6. Exit Condition: 
- Break the loop if 'q' is pressed. 
-7. Cleanup: 
- Release the camera and close all OpenCV windows. 
-This algorithm processes video frames in real-time to detect and annotate objects using a 
-machine learning model, displaying results on the screen.
+An academic computer-vision project exploring automated retail shelf monitoring and activity flagging with **YOLOv8, Roboflow, Python, and OpenCV**.
+
+The project report describes two computer-vision workflows: classifying shelf sections as `Filled` or `Empty`, and flagging configured visual activity classes (such as `Product-Picked` and `Shoplifting`) for staff review.
+
+## Project goals
+
+- Monitor shelf availability from images or video.
+- Highlight shelf areas classified as filled or empty.
+- Annotate detections with bounding boxes and confidence scores.
+- Log model predictions for review.
+- Explore a second inference workflow for retail activity monitoring.
+
+## Repository contents
+
+```text
+.
+├── docs/
+│   └── PROJECT_REPORT_SUMMARY.md
+├── src/
+│   ├── stock_detection.py
+│   └── theft_detection.py
+├── .env.example
+├── .gitignore
+├── requirements.txt
+├── output.png
+└── README.md
+```
+
+- `docs/PROJECT_REPORT_SUMMARY.md` — cleaned overview of the submitted academic report, including its objectives, described architecture, dataset approach, and reported results.
+- `src/stock_detection.py` — configurable Roboflow image inference for shelf stock classes.
+- `src/theft_detection.py` — configurable video inference with annotated output and CSV event logging.
+- `output.png` — an existing sample output image in this repository.
+
+## Technology stack
+
+| Technology | Purpose |
+|---|---|
+| Python | Application scripting |
+| YOLOv8 | Object detection model family described in the report |
+| Roboflow | Dataset annotation, model hosting, and inference |
+| OpenCV | Image/video capture, drawing, and export |
+| Google Colab | Reported development and experimentation environment |
+
+## Setup
+
+**Requirements:** Python 3.9+ and a valid Roboflow model/API key.
+
+1. Clone this repository:
+
+   ```bash
+   git clone https://github.com/haady7/Real-Time-Stock-Management-System-for-Retail-Store.git
+   cd Real-Time-Stock-Management-System-for-Retail-Store
+   ```
+
+2. Create and activate a virtual environment:
+
+   ```bash
+   python -m venv .venv
+   # Windows PowerShell:
+   .venv\Scripts\Activate.ps1
+   # macOS/Linux:
+   source .venv/bin/activate
+   ```
+
+3. Install dependencies:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Configure your own Roboflow credentials:
+
+   ```bash
+   # Windows PowerShell
+   Copy-Item .env.example .env
+   # macOS/Linux
+   cp .env.example .env
+   ```
+
+   Edit `.env` and set `ROBOFLOW_API_KEY`, `STOCK_MODEL_ID`, and `THEFT_MODEL_ID` using values from your own Roboflow workspace. Never commit the populated `.env` file.
+
+## Run stock detection on one image
+
+```bash
+python src/stock_detection.py --image path/to/shelf.jpg
+```
+
+The annotated image is saved to `outputs/stock_detection.jpg` by default. To choose another output path:
+
+```bash
+python src/stock_detection.py --image path/to/shelf.jpg --output outputs/my_result.jpg
+```
+
+## Run activity detection on a video
+
+Use a video file:
+
+```bash
+python src/theft_detection.py --source path/to/store_video.mp4 --preview
+```
+
+Or use the default webcam:
+
+```bash
+python src/theft_detection.py --source 0 --preview
+```
+
+The annotated video and CSV log are saved under `outputs/` by default. Press `q` in the preview window to stop processing.
+
+## Reported results
+
+The academic report states the following figures. They are **reported in the submitted document and have not been independently reproduced by the cleaned scripts in this repository**.
+
+| Metric | Value stated in report |
+|---|---:|
+| Stock classification precision | 92% |
+| Theft-detection accuracy | 85% |
+| Edge processing speed | 30+ FPS |
+| Detection-to-alert latency | Below 500 ms |
+| Planogram adherence | 95% |
+| Stockout reduction in the described pilot | 35% |
+| Theft-incident reduction in the described pilot | 50% |
+
+For context and qualifications, see [the project report summary](docs/PROJECT_REPORT_SUMMARY.md).
+
+## Important limitations and responsible use
+
+- The scripts require your own valid Roboflow credentials and model IDs. The original project dataset and trained model weights are not included.
+- Optional integrations discussed in the academic report (such as SMS/email notifications, ERP synchronization, and a production dashboard) are not implemented by these scripts.
+- Model outputs can be wrong. A `Shoplifting` class prediction is only a signal for trained staff to review; it is **not proof of theft or wrongdoing**.
+- Use surveillance footage only with appropriate authorization, notice, privacy safeguards, and retention controls.
+- The submitted report appendix contained hard-coded Roboflow API credentials. Those credentials are intentionally not included in this public repository. **Revoke/rotate them in Roboflow before reusing the project**, and use environment variables for new credentials.
+
+## Project report
+
+The cleaned project overview is available in [docs/PROJECT_REPORT_SUMMARY.md](docs/PROJECT_REPORT_SUMMARY.md). The original PDF has not been added here because its appendix contained exposed API credentials; a redacted local copy was prepared separately.
+
+## Author and academic context
+
+Based on the B.E. Computer Science and Engineering (Artificial Intelligence & Machine Learning) project, *Advanced Image Recognition for Retail Stock Management* (2024–25), submitted at M. H. Saboo Siddik College of Engineering, University of Mumbai.
+
