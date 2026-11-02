@@ -101,11 +101,16 @@ def main() -> int:
                     break
                 frame_number += 1
 
-                # The inference SDK accepts an image path; use a temporary frame file.
-                with tempfile.NamedTemporaryFile(suffix=".jpg") as temp_image:
-                    if not cv2.imwrite(temp_image.name, frame):
+                # The inference SDK accepts an image path. Close the temporary
+                # file before inference so this also works on Windows.
+                fd, temp_path = tempfile.mkstemp(suffix=".jpg")
+                os.close(fd)
+                try:
+                    if not cv2.imwrite(temp_path, frame):
                         raise RuntimeError("Could not encode a video frame.")
-                    result = client.infer(temp_image.name, model_id=model_id)
+                    result = client.infer(temp_path, model_id=model_id)
+                finally:
+                    Path(temp_path).unlink(missing_ok=True)
 
                 timestamp = datetime.now(timezone.utc).isoformat()
                 for prediction in result.get("predictions", []):
