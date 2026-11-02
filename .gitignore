@@ -1,0 +1,12 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.DS_Store
+
+# Generated inference outputs and logs
+output/
+outputs/
+*.mp4
+theft_log.csv
