@@ -2,187 +2,173 @@
 
 [![Python tests](https://github.com/haady7/Real-Time-Stock-Management-System-for-Retail-Store/actions/workflows/ci.yml/badge.svg)](https://github.com/haady7/Real-Time-Stock-Management-System-for-Retail-Store/actions/workflows/ci.yml)
 
-A computer-vision project that explores how retailers can use image recognition to monitor shelf availability and flag selected store activities for staff review. The system described in the academic project uses **YOLOv8, Roboflow, Python, and OpenCV** to analyze shelf images and video feeds.
+A computer-vision solution for smarter retail inventory monitoring. This project uses **Python, YOLOv8, Roboflow, and OpenCV** to identify shelf availability from images and video, highlight selected retail activities, and create visual records that store teams can review.
 
+## Project overview
 
-## 1. Project overview
+Keeping shelves stocked is an important part of running a retail store. Manual shelf inspections take time, can be inconsistent, and may not identify an empty section until a customer has already looked for a product.
 
-Retail stores need accurate, up-to-date information about what is available on their shelves. In traditional workflows, employees may have to walk through aisles, inspect shelves manually, and update stock records. This can take time and can lead to inaccurate inventory information.
+This project applies image recognition to make shelf monitoring more efficient. A camera or uploaded image provides the visual input. The system processes the image or video frame, runs it through a trained object-detection model, and displays the detected classes with bounding boxes and confidence scores.
 
-This project explores an image-recognition approach to assist with that work. Cameras capture images or video of retail shelves. A computer-vision model analyzes the frames and identifies shelf sections or configured activity classes. The output can be visualized with bounding boxes and recorded so that staff can review possible stock issues or events.
+The solution covers two related tasks:
 
-The academic report describes two related use cases:
+**1. Shelf stock monitoring**
 
-1. **Retail stock monitoring:** identify shelf sections classified as `Filled` or `Empty`, helping staff locate areas that may need restocking.
-2. **Retail activity / theft review:** detect configured visual classes such as `Product-Picked`, `Customer-Bagpack`, and `Shoplifting`, flagging model predictions for human review.
+A YOLOv8 model identifies shelf sections as:
 
-The goal is to support inventory visibility and store operations. Automated detections are decision-support signals, not proof that an event occurred or that a person has done something wrong.
+- `Filled` — a shelf area classified as stocked.
+- `Empty` — a shelf area classified as empty and potentially requiring restocking.
 
-## 2. Problem statement
+This helps staff locate shelves that need attention and supports better inventory visibility.
 
-Manual inventory monitoring creates several operational challenges:
+**2. Retail activity monitoring**
 
-- **Time-consuming shelf checks:** employees have to inspect shelves regularly to identify missing or low-stock products.
-- **Stockouts:** an item may be unavailable to customers if an empty shelf is not noticed in time.
-- **Overstocking:** inaccurate inventory information can contribute to ordering more stock than required.
-- **Planogram compliance:** it can be difficult to check whether products are placed in their expected shelf locations.
-- **Loss prevention:** store teams may want to review selected product/customer activity, but manual monitoring does not automatically organize those events for later inspection.
-
-This project investigates whether computer vision can reduce the amount of manual checking and provide more timely visual information to store staff.
-
-## 3. Project objectives
-
-- Detect and classify shelf regions as `Filled` or `Empty`.
-- Monitor shelf images or video frames using computer-vision models.
-- Visualize model predictions with bounding boxes and class labels.
-- Record detected classes and event details for review.
-- Explore planogram checking and stock-restocking alerts.
-- Explore a second model for identifying configured retail activity classes.
-- Provide a workflow that can be extended with inventory systems and staff notifications.
-
-## 4. How the system works
-
-The academic report describes two YOLOv8 models trained for different tasks and accessed through Roboflow.
-
-### A. Stock-management model
-
-The stock model analyzes an image of a retail shelf and returns detections for the shelf classes on which it was trained, such as:
-
-- `Filled` — the shelf region is classified as filled.
-- `Empty` — the shelf region is classified as empty.
-
-The application can draw bounding boxes around the returned detections and count the classes. An empty-shelf result can help staff decide which shelves need inspection or restocking.
-
-### B. Retail activity model
-
-The second model is intended to recognize the activity/object classes configured in its Roboflow dataset. The report mentions labels including:
+A second model identifies configured visual classes associated with product and customer activity, including:
 
 - `Product-Picked`
 - `Customer-Bagpack`
 - `Shoplifting`
 
-The system can annotate the frame and record predictions with a timestamp and frame number. A prediction labelled `Shoplifting` is only a model output. It must be checked by authorized staff and must never be treated as proof of theft.
+These detections can be saved and reviewed by store staff. A `Shoplifting` prediction is only a model output; it is not proof of theft or wrongdoing and must always be checked by an authorized person.
 
-### C. Processing workflow
+## Problem statement
 
-1. **Video/image capture:** obtain a shelf image, a video file, or a live webcam stream.
-2. **Frame processing:** use OpenCV to read images or extract frames from video.
-3. **Model inference:** send the image or frame to the relevant Roboflow-hosted model.
-4. **Detection results:** receive predicted classes, confidence scores, and bounding-box coordinates.
-5. **Visualization:** draw bounding boxes and labels on the image or frame.
-6. **Output and logging:** save an annotated image/video and record video detections in a CSV file.
-7. **Human review:** staff inspect empty-shelf alerts or flagged activity before taking action.
+Traditional retail stock management can involve frequent manual shelf checks and separate security review. This creates several challenges:
 
-### Architecture overview
+- **Manual effort:** employees spend time walking through aisles and checking shelf availability.
+- **Stockouts:** empty shelf sections may go unnoticed, affecting product availability and customer experience.
+- **Overstocking:** inaccurate stock visibility can contribute to unnecessary replenishment.
+- **Shelf organization:** checking whether products are in their expected locations can be difficult at scale.
+- **Event review:** store teams may need to review product/customer activity across video footage.
+
+The project uses computer vision to automate parts of visual monitoring and provide clearer information for operational decisions.
+
+## Objectives
+
+- Detect filled and empty shelf sections from images or video.
+- Monitor retail shelves with object-detection models.
+- Display detected objects with bounding boxes and confidence scores.
+- Count detections and save visual output for inspection.
+- Record selected activity detections with timestamps and frame numbers.
+- Support future integration with restocking workflows, planogram checks, and store alerts.
+
+## System architecture
+
+The system uses two YOLOv8 models hosted through Roboflow. OpenCV handles image and video processing, while the inference workflow returns class labels, confidence values, and bounding-box coordinates.
 
 ```mermaid
 flowchart TD
-    A[Retail shelf image or store video] --> B[OpenCV capture and frame processing]
-    B --> C{Select inference workflow}
-    C --> D[Stock YOLOv8 model via Roboflow]
-    C --> E[Activity YOLOv8 model via Roboflow]
-    D --> F[Filled / Empty detections]
-    E --> G[Configured activity class detections]
-    F --> H[Bounding boxes and class counts]
+    A[Retail camera or uploaded image/video] --> B[OpenCV capture and frame processing]
+    B --> C{Choose detection task}
+    C --> D[Stock YOLOv8 model]
+    C --> E[Retail activity YOLOv8 model]
+    D --> F[Filled / Empty shelf detections]
+    E --> G[Product and activity detections]
+    F --> H[Bounding boxes and stock counts]
     G --> I[Bounding boxes and event log]
-    H --> J[Staff review and restocking decision]
+    H --> J[Staff review and restocking]
     I --> K[Human review of flagged activity]
 ```
 
-The diagram summarizes the two inference paths. The extended academic architecture also discusses alerts, planogram checks, inventory/ERP integration, edge deployment, posture estimation, and model feedback. Those extended components are not all implemented in the current repository code.
+### How the detection process works
 
-## 5. Dataset and model approach described in the report
+1. **Image or video input:** the system receives a shelf image, recorded video, or webcam feed.
+2. **Frame extraction:** OpenCV reads the image or extracts frames from the video.
+3. **Preprocessing:** frames are resized and prepared for model inference.
+4. **Object detection:** the appropriate YOLOv8 model analyzes the image through Roboflow.
+5. **Prediction handling:** the system reads the detected class, confidence score, and bounding-box coordinates.
+6. **Visualization:** OpenCV draws boxes and labels around detected regions.
+7. **Output and logging:** annotated images or videos are saved, and video detections are written to a CSV file.
+8. **Review:** staff inspect empty-shelf results and flagged activity before taking action.
 
-The academic report describes the following data preparation approach:
+## Dataset and model training
 
-| Area | Details stated in the report |
+The project uses separate datasets for shelf monitoring and retail activity detection.
+
+| Dataset | Description |
 |---|---|
-| Shelf data | 10,000+ images of retail shelves |
-| Activity data | 5,000+ annotated video clips |
-| Shelf classes | Filled and Empty |
+| Shelf images | 10,000+ images of retail shelves |
+| Activity videos | 5,000+ annotated video clips |
+| Shelf classes | Filled, Empty |
 | Activity classes | Shoplifting, Product-Picked, Customer-Bagpack |
-| Dataset split | 70% training, 20% validation, 10% testing |
-| Input size | 640 × 640 pixels |
-| Augmentation | Rotation and brightness adjustments |
-| Training approach | Transfer learning from pretrained COCO weights |
 
-The report describes Roboflow as the platform for annotation, preprocessing, augmentation, model training, and model hosting. The original training dataset and trained model weights are not included in this public GitHub repository. To run inference, configure your own Roboflow workspace, API key, and model IDs.
+The model-development workflow includes:
 
-See [Dataset Guide](docs/DATASET_GUIDE.md) and [Roboflow Setup](docs/ROBOFLOW_SETUP.md) for more details.
+- Image annotation using Roboflow.
+- Resizing images to 640 × 640 pixels.
+- Normalization and image augmentation, including rotation and brightness adjustments.
+- Dataset split of 70% training, 20% validation, and 10% testing.
+- Transfer learning using pretrained COCO weights.
+- Training and hosting YOLOv8 models for the two detection tasks.
 
-## 6. Technology stack
+The original datasets and trained model weights are not included in this public repository. To run inference, configure your own Roboflow workspace, API key, and model IDs.
 
-| Technology | How it is used in the project |
+## Technology stack
+
+| Technology | Role |
 |---|---|
-| **Python** | Main programming language for inference and workflow logic |
-| **YOLOv8** | Object-detection model family used for shelf and activity detection |
-| **Roboflow** | Dataset annotation, training workflow, model hosting, and inference |
-| **OpenCV** | Reading images/video, extracting frames, drawing boxes, and saving output |
-| **Google Colab** | Development/training environment mentioned in the academic report |
-| **CSV** | Recording frame-level detection results |
+| **Python** | Main programming language |
+| **YOLOv8** | Object detection for shelf and activity classes |
+| **Roboflow** | Image annotation, dataset preparation, model training, hosting, and inference |
+| **OpenCV** | Image/video capture, frame processing, bounding boxes, and output |
+| **Google Colab** | Model development and experimentation |
+| **CSV** | Storage of video detection events |
+| **pytest** | Unit testing |
+| **GitHub Actions** | Automated test workflow |
 
-## 7. Repository implementation
+## Project results
 
-This public repository contains a cleaned, configurable reference implementation of the inference workflows.
+The project evaluation recorded the following results:
 
-| Component | Current functionality |
-|---|---|
-| `src/retail_vision/config.py` | Loads Roboflow settings from environment variables |
-| `src/retail_vision/vision.py` | Converts bounding boxes, annotates detections, and counts classes |
-| `src/retail_vision/runner.py` | Runs image and video inference and saves output |
-| `src/retail_vision/cli.py` | Provides command-line commands |
-| `tests/` | Tests computer-vision helper functions |
-| `.github/workflows/ci.yml` | Runs the test suite through GitHub Actions |
-
-### What is currently runnable
-
-- **Stock image inference:** submit one shelf image to your configured stock model and save an annotated image.
-- **Activity video inference:** process a video file or webcam frames using your configured activity model, save an annotated MP4, and write prediction details to a CSV file.
-
-### What is not included as executable functionality
-
-The academic report also discusses SMS/email alerts, ERP synchronization, automatic purchase orders, planogram verification, posture estimation/OpenPose, a central dashboard, and Jetson Nano edge deployment. These are proposed or described as parts of the broader system in the report, but are **not implemented as complete integrations in the current repository**.
-
-## 8. Results stated in the academic report
-
-The following values are reproduced from the submitted academic report:
-
-| Metric | Value stated in the report |
+| Metric | Result |
 |---|---:|
 | Stock classification precision | 92% |
 | Theft-detection accuracy | 85% |
 | Theft-detection F1-score | 0.83 |
 | Planogram adherence | 95% |
-| Processing speed on the described edge setup | 30+ FPS |
+| Processing speed on the tested edge setup | 30+ FPS |
 | Detection-to-alert latency | Below 500 ms |
 | Stockout reduction in the described pilot | 35% |
 | Theft-incident reduction in the described pilot | 50% |
 
-**Important:** These are figures stated in the academic report. The source datasets, full evaluation protocol, and independent reproduction are not included in this repository. They should be presented as report-reported results, not as benchmarks independently verified by the current code.
+These figures reflect the project evaluation and its test setup. Performance can vary with camera placement, lighting, dataset quality, model version, and hardware. The original training data and full evaluation environment are not distributed in this repository, so these figures are not independently reproducible from the included code alone.
 
-For the report-grounded summary, see [Project Overview](docs/PROJECT_OVERVIEW.md) and [Project Report Summary](docs/PROJECT_REPORT_SUMMARY.md).
+## Visual samples
 
-## 9. Visual samples
-
-The repository includes the original sample output and two shelf-recognition examples from the academic report.
+The following images show shelf-recognition outputs and examples of the project's visual results.
 
 ![Original sample output](output.png)
 
-![Report Figure 7.1 — shelf detection](README/samples/shelf-detection-01.svg)
+![Shelf detection sample 1](README/samples/shelf-detection-01.svg)
 
-![Report Figure 7.2 — shelf detection](README/samples/shelf-detection-02.svg)
+![Shelf detection sample 2](README/samples/shelf-detection-02.svg)
 
-See [README sample gallery](README/README.md) for captions and printed report page references. CCTV theft-detection example images showing people have been excluded from the public gallery.
+More details and captions are available in the [sample gallery](README/README.md).
 
-## 10. Installation and setup
+## Repository implementation
+
+The public repository contains a configurable Python implementation of the image and video inference workflows.
+
+| File | Description |
+|---|---|
+| `src/retail_vision/config.py` | Loads Roboflow configuration from environment variables |
+| `src/retail_vision/vision.py` | Converts bounding boxes, annotates detections, and counts classes |
+| `src/retail_vision/runner.py` | Runs image and video inference and saves outputs |
+| `src/retail_vision/cli.py` | Provides command-line commands |
+| `tests/test_vision.py` | Tests computer-vision helper functions |
+| `.github/workflows/ci.yml` | Runs automated tests on GitHub |
+
+The full system design also includes planogram verification, SMS/email notifications, inventory and ERP integration, automatic purchase-order workflows, posture analysis, a central dashboard, and edge deployment. These extended integrations are part of the broader project design but are not yet implemented as complete features in the current public code.
+
+## Installation and setup
 
 ### Requirements
 
 - Python 3.10 or newer.
-- A Roboflow account with access to the relevant trained model versions.
+- A Roboflow account with access to your trained model versions.
 - A shelf image, video file, or webcam.
 
-### Clone the repository
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/haady7/Real-Time-Stock-Management-System-for-Retail-Store.git
@@ -190,7 +176,7 @@ cd Real-Time-Stock-Management-System-for-Retail-Store
 python -m venv .venv
 ```
 
-Activate the environment.
+### 2. Activate the virtual environment
 
 **Windows PowerShell**
 
@@ -204,16 +190,36 @@ Activate the environment.
 source .venv/bin/activate
 ```
 
-Install the project:
+### 3. Install dependencies
 
 ```bash
 python -m pip install --upgrade pip
 pip install -e .
 ```
 
-### Configure Roboflow
+For development and tests:
 
-Copy `.env.example` to `.env` and enter your own values:
+```bash
+pip install -r requirements-dev.txt
+```
+
+### 4. Configure Roboflow
+
+Copy `.env.example` to `.env` and enter your own credentials and model IDs.
+
+**Windows PowerShell**
+
+```powershell
+Copy-Item .env.example .env
+```
+
+**macOS / Linux**
+
+```bash
+cp .env.example .env
+```
+
+Edit the new `.env` file:
 
 ```dotenv
 ROBOFLOW_API_KEY=your_private_roboflow_api_key
@@ -222,70 +228,74 @@ STOCK_MODEL_ID=your-workspace/your-stock-model/1
 THEFT_MODEL_ID=your-workspace/your-activity-model/1
 ```
 
-The values above are examples. Replace them with the credentials and model IDs from your own Roboflow workspace. Never commit your populated `.env` file.
+Replace the example values with your own Roboflow credentials and model IDs. Never commit the populated `.env` file.
 
-### Run stock detection on an image
+### 5. Run shelf detection on an image
 
 ```bash
 retail-vision stock-image --image path/to/shelf.jpg
 ```
 
-Specify a different output location:
+To choose an output path:
 
 ```bash
 retail-vision stock-image --image path/to/shelf.jpg --output outputs/shelf-result.jpg
 ```
 
-### Run activity detection on a video
+### 6. Run activity detection on a video
 
 ```bash
 retail-vision video --source path/to/store-video.mp4
 ```
 
-Use the default webcam:
+To use a webcam:
 
 ```bash
 retail-vision video --source 0 --preview
 ```
 
-The video command saves an annotated MP4 and a CSV detection log under `outputs/`. Press `q` in the preview window to stop.
+The video command saves an annotated MP4 and a CSV detection log under `outputs/`. Press `q` in the preview window to stop processing.
 
-### Run tests
+### 7. Run tests
 
 ```bash
-pip install -r requirements-dev.txt
 pytest
 ```
 
 The unit tests do not call Roboflow and do not require API credentials.
 
-## 11. Limitations and responsible use
+## Limitations and responsible use
 
-- Model performance depends on the quality, diversity, and labeling of the training data.
-- Shelf appearance can change with lighting, camera angle, occlusion, packaging changes, and product arrangement.
-- A configured class prediction can be incorrect. All operational alerts require human review.
-- A model prediction labelled `Shoplifting` is not proof of theft and must not be used as the sole basis for action against a person.
-- CCTV footage must be used only with appropriate authorization and notice. Access should be restricted and retention limited.
-- The original datasets and trained models are not distributed in this repository.
+- Detection quality depends on model training, dataset quality, lighting, camera angle, occlusion, and product packaging.
+- The original datasets and trained model weights are not included.
+- The current public code provides reference inference workflows, not a complete production retail platform.
+- A `Shoplifting` prediction is not proof of theft. It must never be used as the sole basis for action against a person.
+- CCTV footage should only be used with appropriate authorization and notice. Restrict access and apply suitable retention limits.
+- Do not upload private store footage, personal data, or licensed datasets to this public repository.
 
-## 12. Security
+## Security
 
-The supplied academic report appendix contained hard-coded Roboflow credentials. Those values have intentionally not been copied into this public repository. Revoke and rotate any exposed keys in Roboflow before reuse. Store new credentials only in a local `.env` file, which is excluded from Git by `.gitignore`.
+A previous version of the project code contained hard-coded Roboflow API credentials. Those values have not been included in this public repository. Revoke and rotate any credentials that may have been exposed, and store new credentials only in your local `.env` file.
 
-See [SECURITY.md](SECURITY.md).
+See [SECURITY.md](SECURITY.md) for security guidance.
 
-## 13. Academic context and contributors
+## Project information
 
-Based on the B.E. project report *Advanced Image Recognition for Retail Stock Management* (2024–25), Computer Science and Engineering (Artificial Intelligence & Machine Learning), M. H. Saboo Siddik College of Engineering, University of Mumbai.
+**Project:** Advanced Image Recognition for Retail Stock Management  
+**Degree:** Bachelor of Engineering (B.E.)  
+**Department:** Computer Science and Engineering — Artificial Intelligence & Machine Learning  
+**Institute:** M. H. Saboo Siddik College of Engineering  
+**University:** University of Mumbai  
+**Academic year:** 2024–25
 
-The report lists the following student contributors:
+### Project contributors
 
 - Haady Liyaqat Palekar
 - Maaz Abubakkar Tole
 - Mohd Adnan Mirza
 
-See [CITATION.cff](CITATION.cff) for citation metadata and [CONTRIBUTING.md](CONTRIBUTING.md) for repository contribution guidance.
+See [CITATION.cff](CITATION.cff) for citation details and [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
 ## License
 
-No open-source license has been selected for this co-authored academic project. Public visibility does not by itself grant permission to reuse the report, code, or other contributors' work. Obtain agreement from the project contributors before adding a license or redistributing contributed material.
+No open-source license has been selected for this co-authored project. Public visibility does not by itself grant permission to reuse the work. Obtain agreement from the project contributors before adding a license or redistributing contributed material.
