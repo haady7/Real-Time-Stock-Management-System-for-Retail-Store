@@ -19,11 +19,11 @@ The gallery includes the original repository output and two shelf-recognition ex
 
 ![Original sample output](output.png)
 
-![Report Figure 7.1 - shelf detection](assets/samples/shelf-detection-01.svg)
+![Report Figure 7.1 - shelf detection](README/samples/shelf-detection-01.svg)
 
-![Report Figure 7.2 - shelf detection](assets/samples/shelf-detection-02.svg)
+![Report Figure 7.2 - shelf detection](README/samples/shelf-detection-02.svg)
 
-See [assets/samples/README.md](assets/samples/README.md) for captions and source-page references.
+See [README/README.md](README/README.md) for captions and source-page references.
 
 ## Features
 
@@ -42,7 +42,8 @@ See [assets/samples/README.md](assets/samples/README.md) for captions and source
 ├── .github/
 │   └── workflows/
 │       └── ci.yml
-├── assets/
+├── README/
+│   ├── README.md
 │   └── samples/
 │       ├── README.md
 │       ├── shelf-detection-01.svg
