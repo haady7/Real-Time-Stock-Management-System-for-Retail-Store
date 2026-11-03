@@ -1,119 +1,161 @@
-# Real-Time Stock Management System for Retail Store
+# Advanced Image Recognition for Retail Stock Management
 
-An academic computer-vision project exploring automated retail shelf monitoring and activity flagging with **YOLOv8, Roboflow, Python, and OpenCV**.
+A computer-vision project for retail shelf monitoring and visual activity review using **Python, YOLOv8, Roboflow, and OpenCV**.
 
-The project report describes two computer-vision workflows: classifying shelf sections as `Filled` or `Empty`, and flagging configured visual activity classes (such as `Product-Picked` and `Shoplifting`) for staff review.
+The academic project describes two workflows:
 
-## Project goals
+- **Shelf stock monitoring:** classify shelf sections as `Filled` or `Empty` to help staff identify areas that may need restocking.
+- **Retail activity review:** detect configured visual classes such as `Product-Picked` and `Shoplifting`, then record predictions for human review.
 
-- Monitor shelf availability from images or video.
-- Highlight shelf areas classified as filled or empty.
-- Annotate detections with bounding boxes and confidence scores.
-- Log model predictions for review.
-- Explore a second inference workflow for retail activity monitoring.
+> **Project status:** This repository contains configurable reference inference scripts and project documentation. The original datasets and trained model weights are not included. You must supply your own Roboflow workspace, API key, and model IDs. Results mentioned in the academic report are not independently reproduced by this repository.
 
-## Repository contents
+## Features
+
+- Roboflow-hosted object detection on a shelf image.
+- Video/webcam frame processing with OpenCV.
+- Bounding-box annotations and confidence labels.
+- CSV logging of video detections and timestamps.
+- Environment-based credential configuration.
+- Basic tests for computer-vision helper functions.
+- GitHub Actions test workflow.
+
+## Repository structure
 
 ```text
 .
+├── .github/workflows/ci.yml
+├── assets/
+│   └── sample-output.png
+├── data/README.md
 ├── docs/
-│   └── PROJECT_REPORT_SUMMARY.md
-├── src/
-│   ├── stock_detection.py
-│   └── theft_detection.py
+│   ├── DATASET_GUIDE.md
+│   ├── PROJECT_OVERVIEW.md
+│   ├── PROJECT_REPORT_SUMMARY.md
+│   └── ROBOFLOW_SETUP.md
+├── src/retail_vision/
+│   ├── __init__.py
+│   ├── cli.py
+│   ├── config.py
+│   ├── runner.py
+│   └── vision.py
+├── tests/test_vision.py
 ├── .env.example
 ├── .gitignore
+├── CITATION.cff
+├── pyproject.toml
 ├── requirements.txt
-├── output.png
-└── README.md
+├── requirements-dev.txt
+└── SECURITY.md
 ```
-
-- `docs/PROJECT_REPORT_SUMMARY.md` — cleaned overview of the submitted academic report, including its objectives, described architecture, dataset approach, and reported results.
-- `src/stock_detection.py` — configurable Roboflow image inference for shelf stock classes.
-- `src/theft_detection.py` — configurable video inference with annotated output and CSV event logging.
-- `output.png` — an existing sample output image in this repository.
 
 ## Technology stack
 
 | Technology | Purpose |
 |---|---|
-| Python | Application scripting |
-| YOLOv8 | Object detection model family described in the report |
-| Roboflow | Dataset annotation, model hosting, and inference |
-| OpenCV | Image/video capture, drawing, and export |
-| Google Colab | Reported development and experimentation environment |
+| Python | Application and inference orchestration |
+| YOLOv8 | Object-detection model family described in the report |
+| Roboflow | Dataset annotation, model training/hosting, and inference |
+| OpenCV | Image/video capture, annotation, and export |
+| pytest | Automated tests |
+| GitHub Actions | Continuous integration |
 
-## Setup
+## Quick start
 
-**Requirements:** Python 3.9+ and a valid Roboflow model/API key.
+### 1. Requirements
 
-1. Clone this repository:
+- Python 3.10 or newer.
+- A Roboflow account with access to the trained models you intend to use.
+- A local image, video file, or webcam.
 
-   ```bash
-   git clone https://github.com/haady7/Real-Time-Stock-Management-System-for-Retail-Store.git
-   cd Real-Time-Stock-Management-System-for-Retail-Store
-   ```
-
-2. Create and activate a virtual environment:
-
-   ```bash
-   python -m venv .venv
-   # Windows PowerShell:
-   .venv\Scripts\Activate.ps1
-   # macOS/Linux:
-   source .venv/bin/activate
-   ```
-
-3. Install dependencies:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. Configure your own Roboflow credentials:
-
-   ```bash
-   # Windows PowerShell
-   Copy-Item .env.example .env
-   # macOS/Linux
-   cp .env.example .env
-   ```
-
-   Edit `.env` and set `ROBOFLOW_API_KEY`, `STOCK_MODEL_ID`, and `THEFT_MODEL_ID` using values from your own Roboflow workspace. Never commit the populated `.env` file.
-
-## Run stock detection on one image
+### 2. Clone and install
 
 ```bash
-python src/stock_detection.py --image path/to/shelf.jpg
+git clone https://github.com/haady7/Real-Time-Stock-Management-System-for-Retail-Store.git
+cd Real-Time-Stock-Management-System-for-Retail-Store
+python -m venv .venv
 ```
 
-The annotated image is saved to `outputs/stock_detection.jpg` by default. To choose another output path:
+Activate the virtual environment:
+
+```powershell
+# Windows PowerShell
+.venv\Scripts\Activate.ps1
+```
 
 ```bash
-python src/stock_detection.py --image path/to/shelf.jpg --output outputs/my_result.jpg
+# macOS / Linux
+source .venv/bin/activate
 ```
 
-## Run activity detection on a video
-
-Use a video file:
+Install the project:
 
 ```bash
-python src/theft_detection.py --source path/to/store_video.mp4 --preview
+python -m pip install --upgrade pip
+pip install -e .
 ```
 
-Or use the default webcam:
+Install development tools and tests:
 
 ```bash
-python src/theft_detection.py --source 0 --preview
+pip install -r requirements-dev.txt
 ```
 
-The annotated video and CSV log are saved under `outputs/` by default. Press `q` in the preview window to stop processing.
+### 3. Configure Roboflow
 
-## Reported results
+Copy `.env.example` to `.env` and set your own values:
 
-The academic report states the following figures. They are **reported in the submitted document and have not been independently reproduced by the cleaned scripts in this repository**.
+- `ROBOFLOW_API_KEY`
+- `STOCK_MODEL_ID`
+- `THEFT_MODEL_ID`
 
-| Metric | Value stated in report |
+Model IDs normally use the format `workspace/project/version`. See [Roboflow setup](docs/ROBOFLOW_SETUP.md). Never commit your populated `.env` file.
+
+### 4. Run stock detection on one image
+
+```bash
+retail-vision stock-image --image path/to/shelf.jpg
+```
+
+Change the output path:
+
+```bash
+retail-vision stock-image --image path/to/shelf.jpg --output outputs/shelf-result.jpg
+```
+
+### 5. Run activity detection on video
+
+```bash
+retail-vision video --source path/to/store-video.mp4
+```
+
+Use the default webcam:
+
+```bash
+retail-vision video --source 0 --preview
+```
+
+The command saves an annotated MP4 and a CSV detection log under `outputs/`. Press `q` in the preview window to stop. Use `retail-vision --help` for command options.
+
+## Tests
+
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+
+Tests do not call Roboflow or require API credentials.
+
+## What is included and what is not
+
+**Included:** inference client setup, image inference, video/webcam inference, bounding-box visualization, CSV detection logging, configuration template, documentation, tests, and CI.
+
+**Not included:** original private datasets, trained model weights, a Roboflow workspace, posture-estimation implementation, SMS/email notifications, ERP integration, a production dashboard, or a validated retail deployment. These are discussed in the academic report but are not supplied as executable integrations here.
+
+## Results stated in the academic report
+
+The submitted report mentions the following figures. They are included for academic context only; they have **not** been independently reproduced or benchmarked by this repository.
+
+| Measure | Value stated in report |
 |---|---:|
 | Stock classification precision | 92% |
 | Theft-detection accuracy | 85% |
@@ -123,21 +165,22 @@ The academic report states the following figures. They are **reported in the sub
 | Stockout reduction in the described pilot | 35% |
 | Theft-incident reduction in the described pilot | 50% |
 
-For context and qualifications, see [the project report summary](docs/PROJECT_REPORT_SUMMARY.md).
+See [Project Overview](docs/PROJECT_OVERVIEW.md) for source context and limitations.
 
-## Important limitations and responsible use
+## Responsible use and privacy
 
-- The scripts require your own valid Roboflow credentials and model IDs. The original project dataset and trained model weights are not included.
-- Optional integrations discussed in the academic report (such as SMS/email notifications, ERP synchronization, and a production dashboard) are not implemented by these scripts.
-- Model outputs can be wrong. A `Shoplifting` class prediction is only a signal for trained staff to review; it is **not proof of theft or wrongdoing**.
-- Use surveillance footage only with appropriate authorization, notice, privacy safeguards, and retention controls.
-- The submitted report appendix contained hard-coded Roboflow API credentials. Those credentials are intentionally not included in this public repository. **Revoke/rotate them in Roboflow before reusing the project**, and use environment variables for new credentials.
+- A model prediction is not proof of theft or wrongdoing. All alerts require human review.
+- Do not accuse, penalize, or identify an individual solely on the basis of an automated prediction.
+- Use CCTV footage only with appropriate authorization and notice, restrict access, and apply retention limits.
+- Avoid collecting facial or other unnecessary personal data.
+- Do not upload private footage or datasets to this public repository.
 
-## Project report
+## Security
 
-The cleaned project overview is available in [docs/PROJECT_REPORT_SUMMARY.md](docs/PROJECT_REPORT_SUMMARY.md). The original PDF has not been added here because its appendix contained exposed API credentials; a redacted local copy was prepared separately.
+The supplied academic report appendix contained hard-coded Roboflow credentials. They are intentionally not reproduced here. Revoke and rotate any exposed credentials in Roboflow before reuse, and store new credentials only in your local `.env` file. See [SECURITY.md](SECURITY.md).
 
-## Author and academic context
+## Academic context
 
-Based on the B.E. Computer Science and Engineering (Artificial Intelligence & Machine Learning) project, *Advanced Image Recognition for Retail Stock Management* (2024–25), submitted at M. H. Saboo Siddik College of Engineering, University of Mumbai.
+Based on *Advanced Image Recognition for Retail Stock Management*, a B.E. Computer Science and Engineering (Artificial Intelligence & Machine Learning) project, 2024–25, M. H. Saboo Siddik College of Engineering, University of Mumbai.
 
+Project contributors listed in the report: Haady Liyaqat Palekar, Maaz Abubakkar Tole, and Mohd Adnan Mirza. See [CITATION.cff](CITATION.cff).
