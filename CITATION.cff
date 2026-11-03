@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this project, please cite the academic project report and this repository."
+title: "Advanced Image Recognition for Retail Stock Management"
+version: 1.0.0
+authors:
+  - family-names: Palekar
+    given-names: "Haady Liyaqat"
+  - family-names: Tole
+    given-names: "Maaz Abubakkar"
+  - family-names: Mirza
+    given-names: "Mohd Adnan"
