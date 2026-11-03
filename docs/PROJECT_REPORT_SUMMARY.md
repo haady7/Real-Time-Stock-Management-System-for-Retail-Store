@@ -1,82 +1,79 @@
-# Advanced Image Recognition for Retail Stock Management
+# Academic project report summary
 
-## Overview
+**Source:** *Advanced Image Recognition for Retail Stock Management*, B.E. Computer Science and Engineering (Artificial Intelligence & Machine Learning), 2024–25, M. H. Saboo Siddik College of Engineering, University of Mumbai.
 
-This project applies computer vision to two retail tasks:
+The submitted report lists three student contributors and describes a retail computer-vision system based on Roboflow and YOLOv8. This summary preserves the report's claims while distinguishing them from the cleaned implementation currently included in this repository.
 
-1. **Shelf stock monitoring** — classify shelf sections as `Filled` or `Empty` so staff can identify areas that may need restocking.
-2. **Retail security monitoring** — detect visual classes associated with customer/product activity (for example, `Product-Picked`, `Customer-Bagpack`, and `Shoplifting`) and flag events for staff review.
+## Abstract and motivation
 
-The academic report describes a workflow built around Roboflow-trained YOLOv8 models, OpenCV video processing, and a Google Colab/edge-device deployment approach.
+The report proposes using image recognition to automate retail inventory monitoring, reduce manual shelf checks, identify empty shelf areas, support planogram compliance, and flag suspicious retail activity. It describes using webcam or recorded video, real-time frame processing, event logging, and annotated video export.
 
-## Objectives
+## Problem statement and objectives
 
-- Reduce reliance on manual shelf checks.
-- Monitor shelf availability and support restocking decisions.
-- Check product placement against predefined shelf layouts (planograms).
-- Flag potentially suspicious visual events for human review.
-- Save detection details and annotated footage for later inspection.
+Traditional inventory checks are described as labor-intensive and prone to human error. The report identifies stockouts, overstocking, difficulty verifying shelf layouts, and loss prevention as target problems.
 
-## Architecture and workflow
+The stated objectives are to:
 
-1. **Capture:** read shelf or store-camera images/video.
-2. **Preprocess:** extract frames with OpenCV, resize and normalize inputs for model inference.
-3. **Stock inference:** classify shelf regions as `Filled` or `Empty`.
-4. **Security inference:** identify configured product/customer activity classes.
-5. **Output:** draw bounding boxes, count detections, and record event metadata.
-6. **Review and iteration:** review false positives/false negatives and add suitable examples to the training data.
+- Improve accuracy and efficiency in stock tracking.
+- Monitor shelf levels and help prevent stockouts/overstocking.
+- Support planogram compliance.
+- Improve loss prevention by flagging misplaced or missing items.
 
-The report also discusses alerting (audible alarms and SMS/email), inventory/ERP integration, edge deployment, and an active-learning feedback loop as parts of the proposed system.
+## System design described in the report
 
-## Technology stack
+The proposed architecture contains two YOLOv8 models hosted using Roboflow:
 
-- Python
-- YOLOv8
-- Roboflow and Roboflow Inference
-- OpenCV
-- Google Colab
-- NVIDIA Jetson Nano (described as an edge deployment target)
-- OpenPose/posture estimation (described in the report for behavioral analysis)
+1. A stock-management model intended to classify shelf regions as Filled or Empty.
+2. A theft/activity model intended to detect visual classes and activity cues such as Shoplifting, Product-Picked, and Customer-Bagpack.
 
-## Dataset and training approach described in the report
+OpenCV is described as the video-frame processing component. The report also discusses posture estimation, audible alarms, SMS/email alerts, video export, ERP/inventory integration, edge deployment on NVIDIA Jetson Nano, and an active-learning feedback loop. Those additional integrations are not all implemented in the cleaned code currently in this repository.
 
-- More than 10,000 shelf images for the stock-management task.
-- More than 5,000 video clips for the theft-detection task.
-- Shelf labels include `Filled` and `Empty`.
-- Security labels include `Shoplifting`, `Product-Picked`, and `Customer-Bagpack`.
-- A 70% / 20% / 10% training, validation, and test split.
-- Image resizing to 640 × 640 and augmentation such as rotation, brightness changes, and blur.
+## Dataset and training details stated in the report
 
-These are details stated in the submitted academic report; the repository does not include the original datasets.
+- 10,000+ retail shelf images for the stock-management task.
+- 5,000+ annotated video clips for the theft/activity task.
+- Shelf labels include Filled and Empty.
+- Activity labels mentioned include Shoplifting, Product-Picked, and Customer-Bagpack.
+- Training/validation/testing split: 70% / 20% / 10%.
+- Input resizing: 640 × 640 pixels.
+- Augmentation examples: rotations and brightness adjustments.
+- Reported training settings include batch size 16 and learning rate 0.001.
+- The report describes transfer learning from pretrained COCO weights.
 
-## Results stated in the academic report
+The source datasets and model weights were not supplied with this public repository.
 
-| Measure | Figure stated in report |
+## Results stated in the report
+
+| Metric | Value stated in report |
 |---|---:|
-| Stock classification precision | 92% |
-| Theft-detection accuracy | 85% |
+| Stock model precision | 92% |
+| Theft model accuracy | 85% |
+| Theft model F1-score | 0.83 |
+| Planogram adherence | 95% |
 | Edge processing speed | 30+ FPS |
 | Detection-to-alert latency | Below 500 ms |
-| Planogram adherence | 95% |
-| Stockout reduction in the described pilot | 35% |
-| Theft-incident reduction in the described pilot | 50% |
+| Stockout reduction in a described four-week pilot | 35% |
+| Theft-incident reduction in a described four-week pilot | 50% |
 
-**Important:** These are figures reported in the academic document. They have not been independently reproduced or benchmarked by the cleaned scripts in this repository. Treat them as reported project results, not as a verified production guarantee.
+These numbers are **claims recorded in the academic report**. The corresponding source datasets, evaluation scripts, and independent reproduction are not included here. They must not be described as independently validated by the scripts in this repository.
 
-## Code in this repository
+## Software currently included in this repository
 
-The `src/` scripts are cleaned, configurable implementations of the image and video inference workflows described in the report. They require valid Roboflow model IDs and an API key supplied through environment variables. They are not a copy of a complete production deployment, and the optional SMS/email and ERP integrations described in the report are not implemented here.
+The maintained Python package provides configurable Roboflow inference for:
+- One shelf image using the stock model.
+- A video file or webcam using the activity model.
 
-See the root [README](../README.md) for setup and usage.
+It annotates predictions with bounding boxes, exports the processed video, and records video predictions to CSV. Tests cover basic bounding-box conversion, class counting, and annotation.
 
-## Privacy, security, and responsible use
+## Limitations and responsible use
 
-- Do not commit Roboflow API keys, tokens, passwords, private datasets, or private CCTV footage.
-- Configure credentials locally using a `.env` file copied from `.env.example`.
-- Keep camera use lawful and transparent, minimize retained footage, and apply appropriate access controls.
-- A model prediction is only an alert for human review. It is **not proof that a person committed theft**; false positives can occur.
-- The source report contained hard-coded API credentials in its code appendix. Those values have been removed from the public-safe report copy and are intentionally not reproduced here. Rotate those credentials in Roboflow before using the project again.
+- The original datasets and trained Roboflow models are not included.
+- Model IDs and a valid API key must be supplied by the user.
+- SMS/email notifications, ERP integration, production dashboards, and posture estimation are described in the report but are not implemented by this repository's current scripts.
+- An automated Shoplifting label is a model prediction only. It is not proof that a person committed theft and requires appropriate human review.
+- CCTV use must be authorized, transparent, proportionate, and subject to access and retention safeguards.
+- The report appendix contained hard-coded Roboflow API credentials. Those values are intentionally omitted from this public repository. Any exposed keys should be revoked and rotated in Roboflow.
 
-## Source
+## Report organization
 
-Prepared from the supplied academic project report, *Advanced Image Recognition for Retail Stock Management* (B.E. CSE – AI & ML, 2024–25), including its proposed architecture, methodology, results discussion, and Appendix II code workflow.
+The report includes an introduction and motivation, literature survey, problem statement/objectives, proposed architecture, framework and algorithm, experimental setup, results and discussion, conclusion/future scope, references, progress reports, and an appendix containing code and project material.
