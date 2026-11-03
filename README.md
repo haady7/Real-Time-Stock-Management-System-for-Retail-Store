@@ -9,6 +9,8 @@ The academic project describes two workflows:
 
 > **Project status:** This repository contains configurable reference inference scripts and project documentation. The original datasets and trained model weights are not included. You must supply your own Roboflow workspace, API key, and model IDs. Results mentioned in the academic report are not independently reproduced by this repository.
 
+![Sample detection output](output.png)
+
 ## Features
 
 - Roboflow-hosted object detection on a shelf image.
@@ -24,8 +26,7 @@ The academic project describes two workflows:
 ```text
 .
 ├── .github/workflows/ci.yml
-├── assets/
-│   └── sample-output.png
+├── output.png                 # existing sample output image
 ├── data/README.md
 ├── docs/
 │   ├── DATASET_GUIDE.md
