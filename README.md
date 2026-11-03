@@ -13,6 +13,18 @@ The academic project describes two workflows:
 
 ![Sample detection output](output.png)
 
+## Visual samples
+
+The gallery includes the original repository output and two shelf-recognition examples from the academic report.
+
+![Original sample output](output.png)
+
+![Report Figure 7.1 - shelf detection](assets/samples/shelf-detection-01.svg)
+
+![Report Figure 7.2 - shelf detection](assets/samples/shelf-detection-02.svg)
+
+See [assets/samples/README.md](assets/samples/README.md) for captions and source-page references.
+
 ## Features
 
 - Roboflow-hosted object detection on a shelf image.
@@ -48,6 +60,7 @@ The academic project describes two workflows:
 ├── pyproject.toml
 ├── requirements.txt
 ├── requirements-dev.txt
+├── output.png                    # original sample retained for compatibility
 └── SECURITY.md
 ```
 
