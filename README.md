@@ -4,7 +4,6 @@
 
 A computer-vision project that explores how retailers can use image recognition to monitor shelf availability and flag selected store activities for staff review. The system described in the academic project uses **YOLOv8, Roboflow, Python, and OpenCV** to analyze shelf images and video feeds.
 
-![Sample detection output](output.png)
 
 ## 1. Project overview
 
