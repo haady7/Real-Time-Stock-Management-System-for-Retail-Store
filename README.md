@@ -1,5 +1,7 @@
 # Advanced Image Recognition for Retail Stock Management
 
+[![Python tests](https://github.com/haady7/Real-Time-Stock-Management-System-for-Retail-Store/actions/workflows/ci.yml/badge.svg)](https://github.com/haady7/Real-Time-Stock-Management-System-for-Retail-Store/actions/workflows/ci.yml)
+
 A computer-vision project for retail shelf monitoring and visual activity review using **Python, YOLOv8, Roboflow, and OpenCV**.
 
 The academic project describes two workflows:
@@ -179,6 +181,14 @@ See [Project Overview](docs/PROJECT_OVERVIEW.md) for source context and limitati
 ## Security
 
 The supplied academic report appendix contained hard-coded Roboflow credentials. They are intentionally not reproduced here. Revoke and rotate any exposed credentials in Roboflow before reuse, and store new credentials only in your local `.env` file. See [SECURITY.md](SECURITY.md).
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, test, and pull-request guidelines.
+
+## License
+
+No open-source license has been selected for this co-authored academic project. Public visibility does not by itself grant permission to reuse the report, code, or other contributors’ work. Obtain agreement from the project contributors before adding a license or redistributing contributed material.
 
 ## Academic context
 
