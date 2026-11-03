@@ -139,11 +139,11 @@ The following images show shelf-recognition outputs and examples of the project'
 
 ![Original sample output](output.png)
 
-![Shelf detection sample 1](README/samples/shelf-detection-01.svg)
+![Shelf detection sample 1](assets/samples/shelf-detection-01.svg)
 
-![Shelf detection sample 2](README/samples/shelf-detection-02.svg)
+![Shelf detection sample 2](assets/samples/shelf-detection-02.svg)
 
-More details and captions are available in the [sample gallery](README/README.md).
+More details and captions are available in the [sample gallery](assets/samples/README.md).
 
 ## Repository implementation
 
