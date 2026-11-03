@@ -39,28 +39,38 @@ See [assets/samples/README.md](assets/samples/README.md) for captions and source
 
 ```text
 .
-├── .github/workflows/ci.yml
-├── output.png                 # existing sample output image
-├── data/README.md
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+├── assets/
+│   └── samples/
+│       ├── README.md
+│       ├── shelf-detection-01.svg
+│       └── shelf-detection-02.svg
+├── data/
+│   └── README.md
 ├── docs/
 │   ├── DATASET_GUIDE.md
 │   ├── PROJECT_OVERVIEW.md
 │   ├── PROJECT_REPORT_SUMMARY.md
 │   └── ROBOFLOW_SETUP.md
-├── src/retail_vision/
-│   ├── __init__.py
-│   ├── cli.py
-│   ├── config.py
-│   ├── runner.py
-│   └── vision.py
-├── tests/test_vision.py
+├── src/
+│   └── retail_vision/
+│       ├── __init__.py
+│       ├── cli.py
+│       ├── config.py
+│       ├── runner.py
+│       └── vision.py
+├── tests/
+│   └── test_vision.py
+├── output.png                 # original sample retained for compatibility
 ├── .env.example
 ├── .gitignore
 ├── CITATION.cff
+├── CONTRIBUTING.md
 ├── pyproject.toml
 ├── requirements.txt
 ├── requirements-dev.txt
-├── output.png                    # original sample retained for compatibility
 └── SECURITY.md
 ```
 
