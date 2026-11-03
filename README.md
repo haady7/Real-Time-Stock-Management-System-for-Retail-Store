@@ -296,6 +296,6 @@ See [SECURITY.md](SECURITY.md) for security guidance.
 
 See [CITATION.cff](CITATION.cff) for citation details and [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
-## License
+## Copyright and usage
 
-No open-source license has been selected for this co-authored project. Public visibility does not by itself grant permission to reuse the work. Obtain agreement from the project contributors before adding a license or redistributing contributed material.
+This repository is public for viewing and learning, but it is not licensed for reuse. Copying, modifying, redistributing, publishing, or otherwise using project materials requires prior written permission from the relevant rights holders. See [COPYRIGHT.md](COPYRIGHT.md) for the usage notice. Public visibility does not grant reuse rights.
