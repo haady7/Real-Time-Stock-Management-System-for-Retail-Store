@@ -168,7 +168,7 @@ The submitted report mentions the following figures. They are included for acade
 | Stockout reduction in the described pilot | 35% |
 | Theft-incident reduction in the described pilot | 50% |
 
-See [Project Overview](docs/PROJECT_OVERVIEW.md) for source context and limitations.
+See [Project Overview](docs/PROJECT_OVERVIEW.md) for source context and limitations. The [Dataset Guide](docs/DATASET_GUIDE.md) records the labels and data split described in the report.
 
 ## Responsible use and privacy
 
